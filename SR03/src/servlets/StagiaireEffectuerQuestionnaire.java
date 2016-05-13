@@ -1,0 +1,119 @@
+package servlets;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.lang.Math;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import beans.Question;
+import beans.Questionnaire;
+import beans.Utilisateur;
+import dao.DAOException;
+import dao.DAOFactory;
+import dao.QuestionDAO;
+import dao.QuestionnaireDAO;
+import dao.ReponseDAO;
+
+public class StagiaireEffectuerQuestionnaire extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	public static final String AFFICHAGE          = "/WEB-INF/StagiaireEffectuerQuestionnaire.jsp";
+	public static final String ACCESSREFUSED = "/RefuseAccess.jsp";
+	public static final String CONF_DAO_FACTORY = "daofactory";
+	public static final String PARAM_QUESTIONNAIRE = "QuestionnaireID";
+	public static final String ATT_QUESTIONNAIRE = "questionnaire";
+	public static final String PAGE = "page";
+	public static final String PAGEMAX = "pageMax";
+	public static final String ATT_SESSION_USER = "sessionUtilisateur";
+	public static final String ATT_SESSION_NB_QUESTION_PAGE_STAGIAIRE = "sessionQuestionPageStagiaire";
+
+	private QuestionnaireDAO     questionnaireDAO;
+	private QuestionDAO     questionDAO;
+	private ReponseDAO     reponseDAO;
+	private Questionnaire questionnaire;
+
+	public StagiaireEffectuerQuestionnaire() {
+		super();
+	}
+
+	public void init() throws ServletException {
+		/* Récupération d'une instance de nos DAO utiles */
+		this.questionnaireDAO = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getQuestionnaireDao();
+		this.questionDAO = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getQuestionDao();
+		this.reponseDAO = ( (DAOFactory) getServletContext().getAttribute( CONF_DAO_FACTORY ) ).getReponseDao();
+	}    
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/* Récupération de la session*/
+		HttpSession session = request.getSession();
+		Utilisateur user_co = (Utilisateur) session.getAttribute( ATT_SESSION_USER );
+		
+		// Si l'utilisateur connecté est bien un stagiaire
+		if (user_co != null && user_co.getAdmin() == false){
+
+			// Récupération du questionnaire a visualiser
+			String questionnaireIDS = getValeurParametre( request, PARAM_QUESTIONNAIRE);
+			String page = getValeurParametre( request, PAGE);
+			int pageI = Integer.parseInt(page);
+
+			int nb_quest_affich = (int) session.getAttribute(ATT_SESSION_NB_QUESTION_PAGE_STAGIAIRE);
+
+			if (questionnaireIDS != null){
+				int questionnaireID = Integer.parseInt(questionnaireIDS);
+				questionnaire = questionnaireDAO.trouver_ByID(questionnaireID);
+
+				// Récupération des questions de ce questionnaires.
+				List<Question> Lquestion = new ArrayList<Question>();
+				if (questionDAO.lister(questionnaireID) != null)
+					Lquestion.addAll(questionDAO.lister(questionnaireID));
+
+				List<Question> LquestionToAffiche = new ArrayList<Question>();
+				for (int i = 1 ; i <= nb_quest_affich ; i++){
+					if ((i*pageI -1) < Lquestion.size())
+						LquestionToAffiche.add(i-1, Lquestion.get(i*pageI -1));
+				}
+
+				// Pour les questions demandées , on récupère les réponses associées.
+				for (int i = 1 ; i <= nb_quest_affich ; i++){
+					if ((i*pageI -1) < Lquestion.size())
+						LquestionToAffiche.get(i-1).setLReponses(reponseDAO.lister(Lquestion.get(i*pageI -1).getId()));
+				}
+
+				// On rajoute les Questions/Reponses dans le questionnaire.
+				questionnaire.setLQuestions(LquestionToAffiche);
+				request.setAttribute( ATT_QUESTIONNAIRE, questionnaire );
+				request.setAttribute( PAGE, pageI );
+				request.setAttribute( PAGEMAX,  Math.ceil((double)Lquestion.size() / (double)nb_quest_affich));
+			}
+
+			/* Affichage du questionnaire (jsp) */
+			this.getServletContext().getRequestDispatcher( AFFICHAGE ).forward( request, response );
+		}else
+			this.getServletContext().getRequestDispatcher( ACCESSREFUSED ).forward( request, response );
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Vérifier que l'utilisateur a saisit une réponse... (le faire rester dans le cas contraire)
+		
+		//Traiter la réponse choisit par l'utilisateur (sauvegarde etc...)
+		
+		//Passer à la question suivante
+		
+		// Si dernière question valider -> Page de résultat + Sauvegarde en BDD.
+	}
+
+	// Méthode utilitaire qui retourne null si un paramètre est vide, et son contenu sinon.
+	private static String getValeurParametre( HttpServletRequest request, String nomChamp ) {
+		String valeur = request.getParameter( nomChamp );
+		if ( valeur == null || valeur.trim().length() == 0 ) {
+			return null;
+		} else {
+			return valeur;
+		}
+	}
+}
