@@ -19,22 +19,24 @@
 	    <div class="row">
 	    <fieldset>
              <legend>${ question.text }</legend>
-	    	 <form method="post" action="StagiaireEffectuerQuestionnaire">
+	    	 <form method="post" action="RepondreQuestion">
 
 	                   <c:forEach items="${ question.LReponses }" var="reponse" varStatus="boucle">
 	                   		<p>
-		                    <input type="radio" id="${ reponse.id }" name="reponse" value="${ reponse.id }"/>
-	 						<label class="active" for="${ reponse.id }">${ reponse.text } </label>
+		                    <input type="radio" id="${ reponse.id }" name="${ question.id }" value="${ reponse.id }"/>
+	 						<label class="active" for="${ reponse.id }">${ reponse.text } ${ reponse.estValide == 'oui' ? "(Bonne réponse)" : ""  } </label>
 	 						</p>
 	 					</c:forEach>
 	 					<br>
-	 					<input type="submit" value="Valider"  />
 	                           
 	            </form>
 	            </fieldset>
 	            <br>
 	            </div>
 	   </c:forEach>
+	   
+	   <p>Vous avez fait un score de ${ score } sur ${nb_questions}. </p>
+	   <p>Pour une durée de : ${ duree } millisecondes</p>
       	
 	   </div>
 	  	

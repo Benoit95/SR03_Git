@@ -42,7 +42,7 @@
 		                   <li><a href="<c:url value="StagiaireListeQuestionnaire"><c:param name="page" value="1" /></c:url>">Questionnaires</a></li>
 		               </ul>  
 		               <ul class="right hide-on-med-and-down">
-		                   <li><a href="<c:url value="VisualiseResultat"><c:param name="page" value="1" /></c:url>">Mes résultats</a></li>
+		                   <li><a href="<c:url value="StagiaireListeParcours"><c:param name="page" value="1" /></c:url>">Mes résultats</a></li>
 		               </ul>  
 		            </c:if>
 		            
