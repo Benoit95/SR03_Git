@@ -142,23 +142,5 @@
     <servlet-name>StagiaireEffectuerQuestionnaire</servlet-name>
     <url-pattern>/StagiaireEffectuerQuestionnaire</url-pattern>
   </servlet-mapping> 
-  
-    <servlet>
-    <servlet-name>StagiaireListeParcours</servlet-name>
-    <servlet-class>servlets.StagiaireListeParcours</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>StagiaireListeParcours</servlet-name>
-    <url-pattern>/StagiaireListeParcours</url-pattern>
-  </servlet-mapping>
-  
-    <servlet>
-    <servlet-name>StagiaireVisualiseQuestionnaire</servlet-name>
-    <servlet-class>servlets.StagiaireVisualiseQuestionnaire</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>StagiaireVisualiseQuestionnaire</servlet-name>
-    <url-pattern>/StagiaireVisualiseQuestionnaire</url-pattern>
-  </servlet-mapping>
 
 </web-app>

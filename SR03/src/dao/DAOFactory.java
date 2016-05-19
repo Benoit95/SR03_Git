@@ -87,8 +87,4 @@ public class DAOFactory {
     public ReponseDAO getReponseDao() {
         return new ReponseDAOImpl( this );
     }
-    
-    public ParcoursDao getParcoursDao() {
-        return new ParcoursDaoImpl( this );
-    }
 }

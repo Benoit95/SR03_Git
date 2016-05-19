@@ -1,39 +1,22 @@
 package beans;
 
-import org.joda.time.DateTime;
-
 public class Parcours {
-	long id_user;
-	long id_questionnaire;
-	long id_question;
-	long id_reponse;
-	
+	Utilisateur user;
+	Questionnaire questionnaire; //fait par l'utilisateur
 	int score;
-	long duree;
-	
-	public long getId_user() {
-		return id_user;
+	String duree;
+
+	public Utilisateur getUser() {
+		return user;
 	}
-	public void setId_user(long id_user) {
-		this.id_user = id_user;
+	public void setUser(Utilisateur user) {
+		this.user = user;
 	}
-	public long getId_questionnaire() {
-		return id_questionnaire;
+	public Questionnaire getQuestionnaire() {
+		return questionnaire;
 	}
-	public void setId_questionnaire(long id_questionnaire) {
-		this.id_questionnaire = id_questionnaire;
-	}
-	public long getId_question() {
-		return id_question;
-	}
-	public void setId_question(long id_question) {
-		this.id_question = id_question;
-	}
-	public long getId_reponse() {
-		return id_reponse;
-	}
-	public void setId_reponse(long id_reponse) {
-		this.id_reponse = id_reponse;
+	public void setQuestionnaire(Questionnaire questionnaire) {
+		this.questionnaire = questionnaire;
 	}
 	public int getScore() {
 		return score;
@@ -41,15 +24,12 @@ public class Parcours {
 	public void setScore(int score) {
 		this.score = score;
 	}
-	public long getDuree() {
+	public String getDuree() {
 		return duree;
 	}
-	public void setDuree(long duree) {
+	public void setDuree(String duree) {
 		this.duree = duree;
 	}
-	
-
-
 	
 
 	

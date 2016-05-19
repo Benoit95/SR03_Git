@@ -23,7 +23,7 @@
 
 	                   <c:forEach items="${ question.LReponses }" var="reponse" varStatus="boucle">
 	                   		<p>
-		                    <input type="radio" id="${ reponse.id }" name="reponse" value="${ reponse.id }"/>
+		                    <input type="radio" id="${ reponse.id }" name="${ question.id }" value="${ reponse.id }"/>
 	 						<label class="active" for="${ reponse.id }">${ reponse.text } </label>
 	 						</p>
 	 					</c:forEach>
